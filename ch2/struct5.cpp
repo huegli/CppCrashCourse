@@ -22,6 +22,6 @@ private:
 };
 
 int main() {
-    ClockOfTheLongNow clock(2020);
+    ClockOfTheLongNow clock{2020};
     printf("Year: %d\n", clock.get_year());
 }
