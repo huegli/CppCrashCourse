@@ -15,6 +15,14 @@ struct SimpleString {
         buffer[0] = 0;
     }
 
+    SimpleString(const SimpleString& other)
+        : max_size{ other.max_size},
+        buffer{ new char[other.max_size] },
+        length{ other.length } 
+    {
+      std::strncpy(buffer, other.buffer, max_size);
+    }
+
     ~SimpleString() {
         delete[] buffer;
     }
@@ -39,37 +47,22 @@ private:
     size_t length;
 };
 
-struct SimpleStringOwner {
-    SimpleStringOwner(const char* x)
-        : string{ 10 } {
-            if (!string.append_line(x)) {
-                throw std::runtime_error{ "Not enough memory!" };
-            }
-            string.print("Constructed");
-        }
-    ~SimpleStringOwner() {
-        string.print("About to destroy");
-    }
-private:
-    SimpleString string;
-};
-
-void fn_c() {
-    SimpleStringOwner c{ "cccccccccc"  };
-}
-
-void fn_b() {
-    SimpleStringOwner b{ "b" };
-    fn_c();
+void foo(SimpleString x)
+{
+    x.append_line("This change is lost.");
 }
 
 int main()
 {
-    try {
-        SimpleStringOwner a{ "a" };
-        fn_b();
-        SimpleStringOwner d{ "d" };
-    } catch(const std::exception& e) {
-        printf("Exception: %s\n", e.what());
-    }
-}
+    SimpleString a { 50 };
+    a.append_line("We apologize for the");
+    SimpleString a_copy{ a };
+    a.append_line("inconvience");
+    a_copy.append_line("incontinence");
+    a.print("a");
+    a.print("a_copy");
+
+    SimpleString b{20};
+    foo(b);
+    a.print("Still empty");    
+ }
