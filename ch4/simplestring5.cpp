@@ -15,7 +15,7 @@ struct SimpleString {
         buffer[0] = 0;
     }
 
-    SimpleString(const SimpleString&& other) noexcept
+    SimpleString(SimpleString&& other) noexcept
         : max_size{ other.max_size},
         buffer(other.buffer),
         length(other.length) 
@@ -74,7 +74,7 @@ int main()
 {
     SimpleString a{ 50 };
     a.append_line("We apologize for the");
-    SimpleString b{ a };
+    SimpleString b{ std::move(a) };
     b.append_line("last message");
     a.print("a");
     b.print("b");

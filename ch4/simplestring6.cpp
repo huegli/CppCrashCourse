@@ -39,7 +39,7 @@ struct SimpleString {
     {
         delete[] buffer;
         buffer = other.buffer;
-        length = other.length
+        length = other.length;
         max_size = other.max_size;
         other.buffer = nullptr;
         other.length = 0;
