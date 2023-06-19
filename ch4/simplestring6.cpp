@@ -2,17 +2,23 @@
 #include <cstring>
 #include <exception>
 #include <stdexcept>
+#include <utility>
 
 struct SimpleString {
     SimpleString(size_t max_size) 
         : max_size{ max_size },
-        length{} {
+        length{}
+    {
         if (max_size == 0) {
             throw std::runtime_error{ "Max size must be at least 1." };
 
         }
         buffer = new char[max_size];
         buffer[0] = 0;
+    }
+
+    ~SimpleString() {
+        delete[] buffer;
     }
 
     SimpleString(const SimpleString& other)
@@ -23,6 +29,16 @@ struct SimpleString {
       std::strncpy(buffer, other.buffer, max_size);
     }
 
+    SimpleString(SimpleString&& other) noexcept
+        : max_size( other.max_size),
+        buffer( other.buffer ),
+        length( other.length )
+    {
+        other.length = 0;
+        other.buffer = nullptr;
+        other.max_size = 0;
+    }
+    
     SimpleString& operator=(const SimpleString& other) 
     {
         if (this == &other) return *this;
@@ -45,11 +61,6 @@ struct SimpleString {
         other.length = 0;
         other.max_size = 0;
         return *this;
-    }
-
-
-    ~SimpleString() {
-        delete[] buffer;
     }
 
     void print(const char* tag) const {
@@ -92,4 +103,8 @@ int main()
     b = std::move(a);
     // a is "moved-from"
     b.print("b");
+    SimpleString c { std::move(b) };
+    // b is now gone
+    // b.print("b");
+    c.print("c");
  }
