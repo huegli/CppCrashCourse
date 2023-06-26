@@ -1,3 +1,4 @@
+#include <cstdio>
 #include <cstddef>
 #include <new>
 
@@ -43,5 +44,19 @@ void operator delete(void* p) {
 }
 
 int main() {
-    
+  printf("Buckets:   %p\n", heap.buckets);
+  auto breakfast = new unsigned int { 0xC0FFEE };
+  auto dinner = new unsigned int { 0xDEADBEEF };
+  printf("Breakfast: %p 0x%x\n", breakfast, *breakfast);
+  printf("Dinner:    %p 0x%x\n", dinner, *dinner);
+  delete breakfast;
+  delete dinner;
+  try {
+    while (true) {
+      new char;
+      printf("Allocated a char.\n");
+    }
+  } catch (const std::bad_alloc&) {
+    printf("std::bad_alloc caught.\n");
+  }
 }
